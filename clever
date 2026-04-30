@@ -1,0 +1,345 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGMA CHRONICLES: LEGACY CLICKER</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#07070f;color:#fff;font-family:'Rajdhani',sans-serif;overflow:hidden;height:100vh;width:100vw}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:#0a0a12}
+::-webkit-scrollbar-thumb{background:#ffd700;border-radius:2px}
+.num{font-family:'Bebas Neue',cursive}
+.scroll-panel{overflow-y:auto;scrollbar-width:thin;scrollbar-color:#ffd700 #0a0a12}
+
+/* ── DEEP FRY ── */
+.df0{filter:none}
+.df1{filter:brightness(1.15) saturate(1.8) drop-shadow(0 0 8px #ffd700)}
+.df2{filter:brightness(1.3) saturate(3) contrast(1.3) drop-shadow(0 0 16px #ff8c00)}
+.df3{filter:brightness(1.45) saturate(5) contrast(1.6) hue-rotate(8deg) drop-shadow(0 0 22px #ff4400);animation:vibrate .12s infinite}
+.df4{filter:brightness(1.7) saturate(8) contrast(2.1) hue-rotate(18deg) drop-shadow(0 0 32px #ff0000);animation:vibrate .07s infinite}
+.df5{filter:brightness(2.2) saturate(14) contrast(3.2) hue-rotate(35deg) drop-shadow(0 0 44px #ff00ff);animation:vibrate .04s infinite}
+@keyframes vibrate{0%,100%{transform:translate(0,0)}20%{transform:translate(-2px,2px)}40%{transform:translate(2px,-2px)}60%{transform:translate(-2px,-1px)}80%{transform:translate(2px,1px)}}
+
+/* ── RINGS ── */
+@keyframes goldRing{0%,100%{box-shadow:0 0 28px #ffd70099,0 0 60px #ff8c0066}50%{box-shadow:0 0 50px #ffd700cc,0 0 100px #ff8c0099}}
+@keyframes cyanRing{0%,100%{box-shadow:0 0 35px #00ffffaa,0 0 75px #0088ffaa}50%{box-shadow:0 0 65px #ffffffcc,0 0 130px #00aaffcc}}
+@keyframes purpleRing{0%,100%{box-shadow:0 0 30px #a855f799,0 0 65px #7c3aed66}50%{box-shadow:0 0 55px #a855f7cc,0 0 110px #7c3aed99}}
+@keyframes greenRing{0%,100%{box-shadow:0 0 30px #00ff8899,0 0 65px #00cc6666}50%{box-shadow:0 0 55px #00ff88cc,0 0 110px #00cc6699}}
+@keyframes redRing{0%,100%{box-shadow:0 0 30px #f43f5e99,0 0 65px #e11d4866}50%{box-shadow:0 0 55px #f43f5ecc,0 0 110px #e11d4899}}
+@keyframes whiteRing{0%,100%{box-shadow:0 0 30px #ffffff77,0 0 65px #aaaaaa44}50%{box-shadow:0 0 55px #ffffffbb,0 0 110px #aaaaaa66}}
+.ring-gold{animation:goldRing 2s ease-in-out infinite}
+.ring-cyan{animation:cyanRing .45s ease-in-out infinite}
+.ring-purple{animation:purpleRing 1.5s ease-in-out infinite}
+.ring-green{animation:greenRing 1.5s ease-in-out infinite}
+.ring-red{animation:redRing 1.2s ease-in-out infinite}
+.ring-white{animation:whiteRing 2s ease-in-out infinite}
+
+/* ── SQUISH ── */
+.squish{animation:squish .2s ease-out!important;transform-origin:center}
+@keyframes squish{0%{transform:scale(1)}30%{transform:scale(.84) rotate(-2deg)}65%{transform:scale(1.07) rotate(1deg)}100%{transform:scale(1) rotate(0)}}
+
+/* ── LASER ── */
+@keyframes laserPulse{from{opacity:.6;transform:scaleX(.8)}to{opacity:1;transform:scaleX(1.2)}}
+.laser{animation:laserPulse .25s ease-in-out infinite alternate}
+
+/* ── STARFIELD ── */
+.starfield{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;background:#fff;border-radius:50%;animation:starFall linear infinite}
+@keyframes starFall{from{transform:translateY(-10px);opacity:.9}to{transform:translateY(105vh);opacity:0}}
+
+/* ── TICKER ── */
+.ticker-rail{overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-block;animation:tickerScroll 60s linear infinite}
+@keyframes tickerScroll{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+
+/* ── PARTICLES ── */
+.particle{position:fixed;pointer-events:none;z-index:1000;font-size:1.5rem;user-select:none;animation:particleFly 1.3s ease-out forwards}
+@keyframes particleFly{0%{opacity:1;transform:translate(0,0) scale(1.1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4)}}
+
+/* ── HIT TEXT ── */
+.hit{position:fixed;pointer-events:none;z-index:1000;user-select:none;font-family:'Bebas Neue',cursive;font-size:1.8rem;animation:hitFloat .9s ease-out forwards;white-space:nowrap}
+@keyframes hitFloat{0%{opacity:1;transform:translateY(0) scale(1.1)}55%{opacity:1;transform:translateY(-42px) scale(1.2)}100%{opacity:0;transform:translateY(-88px) scale(.7)}}
+
+/* ── SHAKE ── */
+.shaking{animation:bigShake .5s ease-in-out}
+@keyframes bigShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-4px,-3px) rotate(-.6deg)}30%{transform:translate(4px,3px) rotate(.6deg)}45%{transform:translate(-3px,4px) rotate(-.4deg)}60%{transform:translate(3px,-4px) rotate(.4deg)}75%{transform:translate(-4px,2px) rotate(-.5deg)}90%{transform:translate(2px,-3px) rotate(.3deg)}}
+
+/* ── SHOP ── */
+@keyframes shopGlow{0%,100%{box-shadow:0 0 4px rgba(255,215,0,.2)}50%{box-shadow:0 0 18px rgba(255,215,0,.75),0 0 36px rgba(255,140,0,.35)}}
+.shop-glow{animation:shopGlow 2s ease-in-out infinite}
+.shop-card{border-radius:12px;padding:10px 12px;border:1px solid;transition:transform .15s,opacity .2s;cursor:pointer}
+.shop-card:hover{transform:translateY(-2px) scale(1.02)}
+
+/* ── DIM TABS ── */
+.dim-tab{border-radius:8px;padding:5px 10px;font-family:'Bebas Neue',cursive;font-size:.8rem;letter-spacing:1px;cursor:pointer;transition:all .15s;border:1px solid;white-space:nowrap}
+.dim-tab:hover{transform:translateY(-1px)}
+.dim-tab.locked{opacity:.3;cursor:not-allowed}
+
+/* ── OVERLAY ── */
+.overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.93);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(14px);animation:fadeIn .3s ease}
+.overlay-box{animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.75) translateY(40px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+/* ── PRES BTN ── */
+@keyframes pressPulse{0%,100%{box-shadow:0 0 30px #ffd70077,0 0 60px #ff8c0033}50%{box-shadow:0 0 55px #ffd700cc,0 0 110px #ff8c0077}}
+.pres-btn{animation:pressPulse 1.2s ease-in-out infinite;border:none;cursor:pointer;transition:transform .12s}
+.pres-btn:hover{transform:scale(1.06)}
+.pres-btn:active{transform:scale(.93)}
+
+/* ── MEWING BADGE ── */
+@keyframes mewBadge{0%,100%{box-shadow:0 0 18px #00ffff44}50%{box-shadow:0 0 40px #00ffffaa,0 0 70px #0088ff66}}
+.mew-badge{animation:mewBadge 1s ease-in-out infinite}
+
+/* ── PRES NAME ── */
+@keyframes nameFadeIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+.pres-name{animation:nameFadeIn .3s ease forwards;opacity:0}
+
+/* ── BG SHIFT ── */
+@keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ── SOUND WAVE (visual) ── */
+@keyframes soundWave{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1.2)}}
+.sbar{display:inline-block;width:3px;background:currentColor;border-radius:2px;margin:0 1px;transform-origin:bottom}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+/* ══════════════════════════════════════════════
+   🖼️  UPDATED IMAGE URL —[cite: 1]
+══════════════════════════════════════════════ */
+const CLICKER_IMG = "https://aajhslivewire.com/wp-content/uploads/2022/11/IMG_3757-e1668739922754.jpeg";
+/* ══════════════════════════════════════════════ */
+
+/* ── 5 DIMENSIONS ── */
+const DIMENSIONS = [
+  {
+    id:0, name:'OHIO', sub:'The Sigma Origin', icon:'🗿',
+    unlockAt:0, color:'#ffd700', accent:'#ff8c00', ring:'ring-gold',
+    bg:'linear-gradient(135deg,#07070f,#050509)',
+    upgrades:[
+      {name:'Jawline Exercises',         desc:'Getting that sharp rizz.',                    emoji:'💪',color:'#4ade80',baseCps:2,        baseCost:15},
+      {name:'Gaming Chair Zero Support', desc:'Pure posture-maxxing.',                       emoji:'🪑',color:'#60a5fa',baseCps:50,       baseCost:150},
+      {name:'Ohio Headquarters',         desc:'Where the sigmas are born.',                  emoji:'🏢',color:'#f472b6',baseCps:200,      baseCost:1500},
+      {name:'10th Dimension Gyatt',      desc:'The ultimate prestige. Ascend to pure aura.', emoji:'🌌',color:'#ffd700',baseCps:1500,     baseCost:15000},
+    ]
+  },
+  {
+    id:1, name:'SIGMA REALM', sub:'Purple Enlightenment', icon:'🔮',
+    unlockAt:2, color:'#a855f7', accent:'#7c3aed', ring:'ring-purple',
+    bg:'linear-gradient(135deg,#0d0720,#070512)',
+    upgrades:[
+      {name:'Rizz Academy',        desc:'Advanced gyatt studies. Graded on a curve.',         emoji:'📚',color:'#c084fc',baseCps:8000,    baseCost:200000},
+      {name:'Mewing Monastery',    desc:'Monks who never open their mouths.',                 emoji:'🏯',color:'#a855f7',baseCps:45000,   baseCost:2000000},
+      {name:'Sigma Satellite',     desc:'Broadcasting aura from low Earth orbit.',            emoji:'🛸',color:'#818cf8',baseCps:200000,  baseCost:25000000},
+      {name:'Purple Pill Factory', desc:'Mass-producing enlightenment since forever.',        emoji:'💊',color:'#e879f9',baseCps:1500000, baseCost:300000000},
+    ]
+  },
+  {
+    id:2, name:'BRAINROT MATRIX', sub:'We Are All NPCs', icon:'🤖',
+    unlockAt:5, color:'#00ff88', accent:'#00cc66', ring:'ring-green',
+    bg:'linear-gradient(135deg,#001a0d,#000a05)',
+    upgrades:[
+      {name:'NPC Farm',          desc:'Background characters generating passive aura.',       emoji:'👥',color:'#4ade80',baseCps:8e6,     baseCost:5e9},
+      {name:'Ohio Cloning Lab',  desc:'More Sigmas = exponentially more aura.',              emoji:'🧬',color:'#22d3ee',baseCps:6e7,     baseCost:6e10},
+      {name:'Skibidi Signal',    desc:'Broadcasts sigma frequencies on all channels.',        emoji:'📡',color:'#a3e635',baseCps:5e8,     baseCost:7e11},
+      {name:'The Algorithm',     desc:'You ARE the algorithm.',                              emoji:'⚡',color:'#00ff88',baseCps:5e9,     baseCost:1e13},
+    ]
+  },
+  {
+    id:3, name:'MEWING MATRIX', sub:'Jawline: Classified', icon:'💀',
+    unlockAt:9, color:'#f43f5e', accent:'#e11d48', ring:'ring-red',
+    bg:'linear-gradient(135deg,#1a0010,#0a0005)',
+    upgrades:[
+      {name:'Dark Web Rizz',          desc:'Underground aura trafficking at scale.',          emoji:'🕸️',color:'#fb7185',baseCps:3e10, baseCost:2e14},
+      {name:'Temporal Mewing',        desc:'Mewing across time itself.',                      emoji:'⌛',color:'#f472b6',baseCps:3e11, baseCost:2e15},
+      {name:'Quantum Gyatt Collider', desc:'Smashing gyatts at the speed of light.',          emoji:'⚛️',color:'#e879f9',baseCps:3e12, baseCost:2.5e16},
+      {name:'Final Jawline',          desc:'The jaw to end all jaws.',                       emoji:'💀',color:'#f43f5e',baseCps:3e13, baseCost:5e17},
+    ]
+  },
+  {
+    id:4, name:'THE VOID', sub:'Beyond Sigma. Beyond Logic.', icon:'◻️',
+    unlockAt:15, color:'#e5e7eb', accent:'#9ca3af', ring:'ring-white',
+    bg:'linear-gradient(135deg,#050505,#000000)',
+    upgrades:[
+      {name:'Nothing',               desc:'...and yet it generates aura.',                   emoji:'⬛',color:'#e5e7eb',baseCps:2e14, baseCost:1e19},
+      {name:'The Concept of Mewing', desc:'Not mewing. The idea of mewing.',                emoji:'💭',color:'#d1d5db',baseCps:2e15, baseCost:1e21},
+      {name:'Ohio^Ohio',             desc:'Ohio to the power of Ohio.',                      emoji:'🌀',color:'#9ca3af',baseCps:2e16, baseCost:1e23},
+      {name:'You Already Won',       desc:'Congratulations. The game is you.',              emoji:'🏆',color:'#ffd700',baseCps:2e17, baseCost:1e25},
+    ]
+  },
+];
+
+const ALL_UPGRADES = DIMENSIONS.flatMap((d,di) =>
+  d.upgrades.map((u,ui) => ({...u, gid:di*4+ui, dimId:di}))
+);
+
+const TICK = [
+  '🗿 Local Sigma achieves 1,000-day mewing streak — jaw now classified as a weapon',
+  '📈 Scientists confirm Ohio is a simulation running on Windows XP',
+  '💎 Aura levels reaching critical mass in the suburbs',
+  '🥛 Mewing Milk shortages reported across all 47 dimensions',
+  '⚠️ Ohio officials declare state of emergency: Sigma density exceeds legal limit',
+  '📊 Economists confirm Rizz is now a tradeable commodity on the NYSE',
+  '🏆 World record: Sigma achieved 99,999 aura without blinking once',
+  '💀 Baby Gronk studying Sigma Chronicles — analysts predict glowup imminent',
+  '🌌 10th Dimension briefly visible from Cleveland — residents unbothered',
+  '🔥 Deep Fried aesthetic officially recognised as fine art by the Louvre',
+  '📱 Man mews so hard his cheekbones are now load-bearing walls',
+  '🔮 Sigma Realm portal opens in New Jersey — no one goes in voluntarily',
+  '🤖 NPC Farm accused of generating too much lore, regulators baffled',
+  '⚛️ Quantum Gyatt Collider achieves first successful mew at Mach 9',
+  '◻️ Void researcher discovers that nothing is actually quite a lot of something',
+];
+
+const PRES_NAMES = [
+  'Skibidi Toilet','Baby Gronk','The Glitch from Ohio','Rizz Incarnate','NPC #4471',
+  'The Gooner of Omaha','Mew Level 9000','Dark Sigma','Fanum Tax Collector',
+  'The Looksmaxxer Supreme',"Kai Cenat's Wi-Fi",'Delusion Lord','Edge Lord #1',
+  'Silent But Deadly Sigma','The Rizzler of Akron','Ohio Final Boss',
+];
+
+const PARTICLES = ['🗿','📈','💎','🥛','✨','💪','📊'];
+const DF_MILESTONES = [500,5000,50000,500000,5000000,50000000];
+const DF_LABELS = ['Normal','Glowing','Saturated','Corrupted','Deep Fried','Ultra Fried','🔥 MAX BRAINROT'];
+
+/* ── UTILS ── */
+const fmt = n => {
+  if(n>=1e24)return(n/1e24).toFixed(2)+'Sp';
+  if(n>=1e21)return(n/1e21).toFixed(2)+'Sx';
+  if(n>=1e18)return(n/1e18).toFixed(2)+'Qi';
+  if(n>=1e15)return(n/1e15).toFixed(2)+'Qa';
+  if(n>=1e12)return(n/1e12).toFixed(2)+'T';
+  if(n>=1e9) return(n/1e9).toFixed(2)+'B';
+  if(n>=1e6) return(n/1e6).toFixed(2)+'M';
+  if(n>=1e3) return(n/1e3).toFixed(2)+'K';
+  return Math.floor(n).toString();
+};
+const upgCost=(u,o)=>Math.floor(u.baseCost*Math.pow(1.15,o));
+const upgCps=(u,o)=>u.baseCps*o;
+const getDf=t=>{for(let i=DF_MILESTONES.length-1;i>=0;i--)if(t>=DF_MILESTONES[i])return i+1;return 0};
+const save=s=>{try{localStorage.setItem('sc2025v2',JSON.stringify(s))}catch{}};
+const load=()=>{
+  try{
+    const s=localStorage.getItem('sc2025v2');
+    if(s)return JSON.parse(s);
+    const v1=localStorage.getItem('sc2025');
+    if(v1){
+      const d=JSON.parse(v1);
+      const owned=Array(20).fill(0);
+      if(Array.isArray(d.owned))d.owned.forEach((v,i)=>{if(i<4)owned[i]=v;});
+      return {...d,owned};
+    }
+    return null;
+  }catch{return null;}
+};
+
+/* ── STARS ── */
+const STARS=Array.from({length:90},(_,i)=>({id:i,left:Math.random()*100,size:Math.random()*3+.5,dur:Math.random()*4+2,del:Math.random()*7}));
+const Starfield=()=>(
+  <div className="starfield">
+    {STARS.map(s=><div key={s.id} className="star" style={{left:`${s.left}%`,width:s.size,height:s.size,animationDuration:`${s.dur}s`,animationDelay:`${s.del}s`}}/>)}
+  </div>
+);
+
+/* ── STONE ── */
+const SigmaStone=({mewing,df,dimId,onClick,stoneRef})=>{
+  const [sq,setSq]=useState(false);
+  const fire=e=>{setSq(true);setTimeout(()=>setSq(false),220);onClick(e);};
+  const dim=DIMENSIONS[dimId]||DIMENSIONS[0];
+  const rc=mewing?'#00ffff':dim.color;
+  const ringCls=mewing?'ring-cyan':dim.ring;
+  const bg=mewing
+    ?'radial-gradient(circle at 40% 35%,#001050,#000228,#000008)'
+    :'radial-gradient(circle at 40% 35%,#1e1600,#141000,#080600)';
+  return(
+    <div ref={stoneRef} className={`${ringCls}${sq?' squish':''}`} onClick={fire}
+      style={{width:230,height:230,borderRadius:'50%',background:bg,border:`5px solid ${rc}`,cursor:'pointer',userSelect:'none',display:'flex',alignItems:'center',justifyContent:'center',position:'relative',transition:'transform .15s'}}
+    >
+      <div style={{position:'absolute',inset:-14,borderRadius:'50%',border:`1px solid ${rc}44`,pointerEvents:'none'}}/>
+      <div className={`df${Math.min(df,5)}`} style={{width:210,height:210,borderRadius:'50%',overflow:'hidden',position:'relative'}}>
+        <img src={CLICKER_IMG} alt="clicker" style={{width:'100%',height:'100%',objectFit:'cover',display:'block',pointerEvents:'none'}}/>
+        {mewing&&<div className="laser" style={{position:'absolute',top:'38%',left:'5%',right:'5%',height:10,background:'linear-gradient(90deg,transparent,#ff2200,#ffffff,#ff2200,transparent)',borderRadius:'50%',filter:'blur(3px)',boxShadow:'0 0 20px #ff0000,0 0 50px #ff4400'}}/>}
+      </div>
+      <div style={{position:'absolute',bottom:9,right:9,background:'rgba(0,0,0,.78)',border:`1px solid ${rc}66`,borderRadius:7,padding:'2px 8px',fontFamily:"'Bebas Neue',cursive",fontSize:'.72rem',color:rc,letterSpacing:1}}>LVL {df}</div>
+    </div>
+  );
+};
+
+/* ── UPGRADE CARD ── */
+const UpgCard=({u,owned,aura,onBuy})=>{
+  const cost=upgCost(u,owned);
+  const can=aura>=cost&&cost!==Infinity;
+  return(
+    <div className={`shop-card ${can?'shop-glow':''}`} onClick={()=>can&&onBuy(u.gid)}
+      style={{background:can?'linear-gradient(135deg,rgba(20,20,32,.97),rgba(28,22,8,.97))':'rgba(12,12,18,.8)',borderColor:can?u.color:'rgba(255,255,255,.08)',opacity:can?1:.52,cursor:can?'pointer':'not-allowed'}}
+    >
+      <div style={{display:'flex',alignItems:'center',gap:10}}>
+        <div style={{width:48,height:48,borderRadius:10,flexShrink:0,background:`linear-gradient(135deg,${u.color}22,${u.color}08)`,border:`1px solid ${u.color}55`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.9rem'}}>{u.emoji}</div>
+        <div style={{flex:1,minWidth:0}}>
+          <div className="num" style={{fontSize:'1.05rem',color:u.color,letterSpacing:.8}}>{u.name}</div>
+          <div style={{fontSize:'.7rem',color:'rgba(255,255,255,.5)',marginBottom:3,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{u.desc}</div>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <span style={{fontSize:'.7rem',color:'rgba(255,255,255,.4)'}}>+{fmt(u.baseCps)} CPS · ×{owned}</span>
+            <span className="num" style={{fontSize:'1rem',color:can?'#ffd700':'rgba(255,215,0,.35)'}}>💎{cost===Infinity?'∞':fmt(cost)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ── PRESTIGE OVERLAY ── */
+const PresOverlay=({prestige,onClose,onConfirm})=>{
+  const names=useMemo(()=>[...PRES_NAMES].sort(()=>Math.random()-.5),[]);
+  const colors=['#ffd700','#60a5fa','#f472b6','#4ade80'];
+  return(
+    <div className="overlay">
+      <div className="overlay-box" style={{background:'linear-gradient(135deg,#07070f,#1a0d00)',border:'2px solid #ffd700',borderRadius:20,padding:'36px 40px',maxWidth:480,width:'92%',textAlign:'center',boxShadow:'0 0 80px #ffd70055,0 0 160px #ff8c0022'}}>
+        <div style={{fontSize:'3.5rem',marginBottom:8}}>🌌</div>
+        <div className="num" style={{fontSize:'2.5rem',color:'#ffd700',letterSpacing:4,marginBottom:6}}>ASCEND TO THE 10TH DIMENSION</div>
+        <div style={{color:'rgba(255,255,255,.65)',marginBottom:20,fontSize:'.88rem',lineHeight:1.7}}>
+          All Aura and Upgrades will be lost.<br/>
+          Receive <span style={{color:'#ffd700',fontWeight:700}}>Aura Tokens</span> for a permanent multiplier.
+        </div>
+        <div className="scroll-panel" style={{background:'rgba(0,0,0,.55)',border:'1px solid rgba(255,215,0,.2)',borderRadius:12,padding:'10px 14px',marginBottom:24,maxHeight:150}}>
+          <div className="num" style={{color:'#555',fontSize:'.78rem',letterSpacing:2,marginBottom:6}}>— SIGMA LEGACY ROLL —</div>
+          {names.map((n,i)=>(
+            <div key={n} className="pres-name" style={{fontSize:'.85rem',color:colors[i%4],padding:'2px 0',animationDelay:`${i*.04}s`,animationFillMode:'forwards'}}>{i+1}. {n}</div>
+          ))}
+        </div>
+        <div style={{display:'flex',gap:12,justifyContent:'center'}}>
+          <button onClick={onConfirm} className="pres-btn" style={{background:'linear-gradient(135deg,#ffd700,#ff8c00)',borderRadius:10,padding:'12px 28px',fontFamily:"'Bebas Neue',cursive",fontSize:'1.2rem',letterSpacing:2,color:'#000'}}>🌌 ASCEND #{prestige+1}</button>
+          <button onClick={onClose} style={{background:'rgba(255,255,255,.07)',border:'1px solid rgba(255,255,255,.18)',borderRadius:10,padding:'12px 28px',cursor:'pointer',fontFamily:"'Bebas Neue',cursive",fontSize:'1.2rem',letterSpacing:2,color:'#fff',transition:'transform .12s'}}
+            onMouseEnter={e=>e.currentTarget.style.transform='scale(1.05)'}
+            onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
+          >STAY MORTAL</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ══════════════════════════════════
+   APP
+══════════════════════════════════ */
+const App=()=>{
+  const s0=load();
